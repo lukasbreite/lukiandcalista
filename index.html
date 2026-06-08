@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>lukiandcalista.com</title>
+
+    <style>
+        :root {
+            --bg-color: #dbeafe;       /* Ein wunderschönes, deutlicheres Pastel-Himmelblau */
+            --card-color: #ffffff;
+            --text-color: #243b53;     
+            --accent-pink: #ff85a1;    
+            --accent-pink-hover: #fca3b7;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: background-color 0.5s ease;
+        }
+
+        .container {
+            background: var(--card-color);
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(150, 170, 190, 0.5);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            transition: all 0.5s ease;
+        }
+
+        .container.dashboard-mode {
+            max-width: 550px;
+        }
+
+        h1 { font-size: 26px; margin: 0 0 15px 0; color: var(--accent-pink); }
+        h2 { font-size: 22px; margin: 0 0 15px 0; color: var(--accent-pink); }
+        p { font-size: 16px; line-height: 1.6; color: #486581; margin: 0 0 10px 0; }
+
+        input[type="password"] {
+            width: 85%;
+            padding: 14px;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            box-sizing: border-box;
+            outline: none;
+            font-family: inherit;
+            background-color: #f8fafc;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        input[type="password"]:focus { border-color: var(--accent-pink); background-color: #fff; }
+
+        button {
+            background-color: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+        }
+        button:hover { background-color: var(--accent-pink-hover); }
+        button:active { transform: scale(0.98); }
+
+        .hidden { display: none !important; }
+        
+        /* TAB NAVIGATION */
+        .navigation {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .nav-btn {
+            background-color: #fff0f3;
+            color: var(--accent-pink);
+            padding: 12px;
+            font-size: 14px;
+            border-radius: 14px;
+            border: 1px solid #ffe3e8;
+        }
+        .nav-btn.active {
+            background-color: var(--accent-pink);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 133, 161, 0.3);
+        }
+        /* Der Wetter-Button bekommt über die volle Breite Platz */
+        .nav-btn-full {
+            grid-column: span 2;
+        }
+
+        /* CONTENT BOXEN */
+        .content-box {
+            animation: fadeIn 0.4s ease-in-out;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            margin-top: 15px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Countdown Styles */
+        .countdown-container { margin-top: 25px; padding-top: 20px; border-top: 1px dashed #cbd5e1; width: 100%; }
+        .countdown { display: flex; justify-content: space-around; width: 100%; margin: 10px 0; }
+        .time-box { background: white; padding: 10px; border-radius: 12px; width: 60px; border: 1px solid #e2e8f0; }
+        .time-box span { display: block; font-size: 18px; font-weight: bold; color: var(--accent-pink); }
+        .time-box label { font-size: 10px; color: #627d98; text-transform: uppercase; }
+
+        /* Mini-Gallery Styles */
+        .gallery-container { display: flex; gap: 12px; overflow-x: auto; width: 100%; padding: 10px 0; scroll-snap-type: x mandatory; }
+        .gallery-img { 
+            width: 160px; 
+            height: 160px; 
+            border-radius: 16px; 
+            object-fit: cover; 
+            scroll-snap-align: start; 
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 3px solid #fff;
+        }
+
+        /* List Styles */
+        .custom-list { text-align: left; width: 100%; }
+        .list-item { padding: 10px 0; font-size: 15px; color: #486581; border-bottom: 1px solid #e2e8f0; }
+        .list-item:last-child { border-bottom: none; }
+        .list-item span { float: right; }
+
+        /* Wetter Widget Anpassung */
+        .weather-widget {
+            width: 100%;
+            max-width: 460px;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-card" class="container">
+        
+        <div id="login-screen">
+            <h1>Welcome to lukiandcalista.com</h1>
+            <p>Enter password to unlock your birthday surprise:</p>
+            <input type="password" id="password-input" placeholder="Password...">
+            <br>
+            <button id="unlock-btn" style="width: 90%;">Unlock ❤️</button>
+            <p id="error-msg" style="color: #ef4444; font-size: 14px; margin-top: 12px;" class="hidden">Oops, that's not it! 😘</p>
+
+            <div id="birthday-countdown-box" class="countdown-container">
+                <p style="font-size: 14px; font-weight: bold; margin: 0;">⏳ Time left until Calista is freaking 21:</p>
+                <div class="countdown">
+                    <div class="time-box"><span id="days">00</span><label>Days</label></div>
+                    <div class="time-box"><span id="hours">00</span><label>Hrs</label></div>
+                    <div class="time-box"><span id="minutes">00</span><label>Min</label></div>
+                    <div class="time-box"><span id="seconds">00</span><label>Sec</label></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboard-screen" class="hidden">
+            <h1>Happy Birthday honey! 🎂✨</h1>
+            <p>Welcome to our silly little website! Have fun exploring it and feel my never ending love for you<3!</p>
+
+            <div class="navigation">
+                <button class="nav-btn active" onclick="switchTab('dates')">📅 Calendar>
+                <button class="nav-btn" onclick="switchTab('memories')">📸 Galery</button>
+                <button class="nav-btn" onclick="switchTab('dreams')">🗺️Travel plans</button>
+                <button class="nav-btn" onclick="switchTab('distance')">🌍 Distance</button>
+                <button class="nav-btn nav-btn-full" onclick="switchTab('weather')">🌤️  Weather at Lukis home</button>
+            </div>
+
+            <div id="tab-dates" class="content-box">
+                <h2>⏳ Dating since</h2>
+                <p id="love-counter" style="font-size: 20px; font-weight: bold; color: var(--accent-pink); margin-bottom: 20px;">Loading...</p>
+                
+                <h2 style="margin-top: 10px;">✈️ Calista comes to Germany in:</h2>
+                <div class="countdown">
+                    <div class="time-box"><span id="f-days">00</span><label>Days</label></div>
+                    <div class="time-box"><span id="f-hours">00</span><label>Hrs</label></div>
+                    <div class="time-box"><span id="f-minutes">00</span><label>Min</label></div>
+                    <div class="time-box"><span id="f-seconds">00</span><label>Sec</label></div>
+                </div>
+            </div>
+
+            <div id="tab-memories" class="content-box hidden">
+                <h2>Our facourite Snapshots</h2>
+                <p style="font-size: 14px; margin-bottom: 10px;">Swipe to see how cute we are</p>
+                <div class="gallery-container">
+                    <img src="https://picsum.photos/300/300?random=1" class="gallery-img" alt="Memory 1">
+                    <img src="https://picsum.photos/300/300?random=2" class="gallery-img" alt="Memory 2">
+                    <img src="https://picsum.photos/300/300?random=3" class="gallery-img" alt="Memory 3">
+                    <img src="https://picsum.photos/300/300?random=4" class="gallery-img" alt="Memory 4">
+                    <img src="https://picsum.photos/300/300?random=5" class="gallery-img" alt="Memory 5">
+                </div>
+            </div>
+
+            <div id="tab-dreams" class="content-box hidden">
+                <h2>🗺️ Our Travel Bucketlist</h2>
+                <p style="font-size: 14px; margin-bottom: 15px;">Hehehe Im so excited to make all these adventures happen with you:</p>
+                <div class="custom-list">
+                    <div class="list-item">See huuuuge castles in Germany and kiss like in a disney movie</span></div>
+                    <div class="list-item">Eat loads of Pasta and Pizza with Aperol Spritz </span></div>
+                    <div class="list-item">Camp all over Europe and stargaze</span></div>
+                    <div class="list-item">Go raving and clubbing + meeting lukis friends </span></div>
+                </div>
+            </div>
+
+            <div id="tab-distance" class="content-box hidden">
+                <h2>📍 Our Distance</h2>
+                <p id="distance-text">Here you can find out how many freaking heartbreaking miles youre apart from me rn</p>
+                <button id="gps-btn" style="width: 90%; margin-top: 10px;">Calculate Distance 🌍</button>
+            </div>
+
+            <div id="tab-weather" class="content-box hidden">
+                <h2>🌤️ Luki's Current Weather</h2>
+                <p style="font-size: 14px; margin-bottom: 15px;">Check out if it's sunny or rainy in Tübingen right now: 😊</p>
+                
+                <div class="weather-widget">
+                    <a class="weatherwidget-io" href="https://forecast7.com/en/48fd529fd05/tubingen/" data-label_1="TÜBINGEN" data-label_2="Germany" data-icons="Climacons Animated" data-theme="pure" >TÜBINGEN Weather</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+    </script>
+
+    <script>
+        const SECRET_PASSWORD = "921154"; 
+        const BIRTHDAY_DATE = new Date("2026-06-11T00:00:00-07:00").getTime(); 
+        const NEXT_FLIGHT_DATE = new Date("2026-07-23T10:20:00").getTime();    
+        const ANNIVERSARY_DATE = new Date("2026-01-12T22:30:00");              
+
+        // Koordinaten von Calistas Heimatstadt (Beispiel: Los Angeles)
+        const CALISTA_LAT = 39.73104; 
+        const CALISTA_LON = -121.8411774;
+
+        // TAB-WECHSEL LOGIK
+        function switchTab(tabName) {
+            document.getElementById('tab-dates').classList.add('hidden');
+            document.getElementById('tab-memories').classList.add('hidden');
+            document.getElementById('tab-dreams').classList.add('hidden');
+            document.getElementById('tab-distance').classList.add('hidden');
+            document.getElementById('tab-weather').classList.add('hidden');
+            
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            event.currentTarget.classList.add('active');
+        }
+
+        // TIMER & COUNTDOWNS
+        setInterval(function() {
+            const now = new Date().getTime();
+
+            // Geburtstag
+            const distBirthday = BIRTHDAY_DATE - now;
+            if (distBirthday > 0) {
+                document.getElementById("days").innerText = String(Math.floor(distBirthday / (1000 * 60 * 60 * 24))).padStart(2, '0');
+                document.getElementById("hours").innerText = String(Math.floor((distBirthday % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+                document.getElementById("minutes").innerText = String(Math.floor((distBirthday % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                document.getElementById("seconds").innerText = String(Math.floor((distBirthday % (1000 * 60)) / 1000)).padStart(2, '0');
+            } else {
+                const box = document.getElementById("birthday-countdown-box");
+                if (box) box.classList.add("hidden");
+            }
+
+            // Nächster Flug
+            const distFlight = NEXT_FLIGHT_DATE - now;
+            if (distFlight > 0) {
+                document.getElementById("f-days").innerText = String(Math.floor(distFlight / (1000 * 60 * 60 * 24))).padStart(2, '0');
+                document.getElementById("f-hours").innerText = String(Math.floor((distFlight % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+                document.getElementById("f-minutes").innerText = String(Math.floor((distFlight % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                document.getElementById("f-seconds").innerText = String(Math.floor((distFlight % (1000 * 60)) / 1000)).padStart(2, '0');
+            }
+        }, 1000);
+
+        // BEZIEHUNGS-ZÄHLER
+        setInterval(function() {
+            const now = new Date();
+            const diffTime = Math.abs(now - ANNIVERSARY_DATE);
+            
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+            const diffSeconds = Math.floor((diffTime % (1000 * 60)) / 1000);
+
+            document.getElementById("love-counter").innerText = `${diffDays}d ${diffHours}h ${diffMinutes}m ${diffSeconds}s`;
+        }, 1000);
+
+        // GPS DISTANZ-BERECHNUNG (JETZT IN MEILEN)
+        document.getElementById("gps-btn").addEventListener("click", function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const myLat = position.coords.latitude;
+                    const myLon = position.coords.longitude;
+                    
+                    const R = 3956; // Erdradius in Meilen (statt 6371 km)
+                    const dLat = (CALISTA_LAT - myLat) * Math.PI / 180;
+                    const dLon = (CALISTA_LON - myLon) * Math.PI / 180;
+                    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                              Math.cos(myLat * Math.PI / 180) * Math.cos(CALISTA_LAT * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                    const distance = Math.round(R * c);
+
+                    document.getElementById("distance-text").innerHTML = 
+                        `You are currently <strong style="color:var(--accent-pink); font-size:19px;">${distance} miles</strong> away from Luki ❤️`;
+                }, function() {
+                    alert("Please allow location access to calculate the distance.");
+                });
+            } else {
+                alert("Geolocation is not supported by your browser.");
+            }
+        });
+
+        // LOGIN FREISCHALTUNG
+        document.getElementById("unlock-btn").addEventListener("click", function() {
+            const input = document.getElementById("password-input").value;
+            if (input === SECRET_PASSWORD) {
+                document.getElementById("login-screen").classList.add("hidden");
+                document.getElementById("dashboard-screen").classList.remove("hidden");
+                document.getElementById("main-card").classList.add("dashboard-mode");
+            } else {
+                document.getElementById("error-msg").classList.remove("hidden");
+            }
+        });
+    </script>
+</body>
+</html>
