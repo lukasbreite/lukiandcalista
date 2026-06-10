@@ -145,11 +145,41 @@
             border: 3px solid #fff;
         }
 
-        /* List Styles */
-        .custom-list { text-align: left; width: 100%; }
-        .list-item { padding: 10px 0; font-size: 15px; color: #486581; border-bottom: 1px solid #e2e8f0; }
-        .list-item:last-child { border-bottom: none; }
-        .list-item span { float: right; }
+       /* Vertikale Scroll-Liste für Reisepläne */
+.travel-scroll-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 280px; /* Bestimmt, wie hoch die Box ist, bevor man scrollen muss */
+    overflow-y: auto;  /* Aktiviert das vertikale Scrollen */
+    padding: 10px 5px;
+    width: 100%;
+    scroll-snap-type: y mandatory; /* Lässt die Karten beim Scrollen sauber einrasten */
+    box-sizing: border-box;
+}
+
+.travel-card {
+    background: white;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    scroll-snap-align: start; /* Der Startpunkt, an dem die Karte einrastet */
+    flex-shrink: 0;
+    text-align: left;
+}
+
+.travel-card h3 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+    color: var(--accent-pink);
+}
+
+.travel-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #486581;
+}
 
         /* Wetter Widget Anpassung */
         .weather-widget {
@@ -299,16 +329,48 @@
                 </div> 
             </div> 
 
-            <div id="tab-dreams" class="content-box hidden">
-                <h2>🗺️ Our Travel Bucketlist</h2>
-                <p style="font-size: 14px; margin-bottom: 15px;">Hehehe Im so excited to make all these adventures happen with you:</p>
-                <div class="custom-list">
-                    <div class="list-item">See huuuuge castles in Germany and kiss like in a disney movie 🏰</div>
-                    <div class="list-item">Eat loads of Pasta and Pizza with Aperol Spritz 🍹</div>
-                    <div class="list-item">Camp all over Europe and stargaze ✨</div>
-                    <div class="list-item">Go raving and clubbing + meeting lukis friends 🕺</div>
-                </div>
-            </div>
+           <div id="tab-dreams" class="content-box hidden">
+    <h2>🗺️ Our Travel Bucketlist</h2>
+    <p style="font-size: 14px; margin-bottom: 15px;">Hehehe Im so excited to make all these adventures happen with you:</p>
+    
+    <div class="travel-scroll-container">
+        <!-- Karte 1 -->
+        <div class="travel-card">
+            <h3>🏰 Princess Calista</h3>
+            <p>Lets go see huuuuge castles in Germany and kiss like in a disney movie! I cant wait to show you Schloss Lichtenstein and Burg Hohenzollern, places I have loved going to as a little kiddo. I promise you, you have never seen anything like that irl and i will hug you from the back so you wont fall over when youre in shock because of how amazing it is.</p>
+        </div>
+
+        <!-- Karte 2 -->
+        <div class="travel-card">
+            <h3>🍹 Bella Italia</h3>
+            <p>May I invite you to eat loads of Pasta and Pizza with Aperol Spritz and wine in romantic restraunts?. We need to find the tiniest bridge in Venezia, Skinny dip in Lago di Garda, have amazing coffee right from its origin in a cutsy little street cafe and share a cheeky little cig, hike up to alpe de suisse, spend nights in the fancy clubs of Verona and get ice cream on the way home .</p>
+        </div>
+
+        <!-- Karte 3 -->
+        <div class="travel-card">
+            <h3>✨ Carcamping & Stargazing</h3>
+            <p>This is my favourite part: we are gonna camp all over Europe, find lonely spots in nature with our own bonfire and meadow and watch the shooting stars from the roof of the car. Every single one we see will make me wish this summer last forever.</p>
+        </div>
+
+        <!-- Karte 4 -->
+        <div class="travel-card">
+            <h3>🕺Rave time!!</h3>
+            <p>We are so gonna go raving and clubbing all night long and you can finally meet all of my friends and dance, cause musik is a language everyone speaks.</p>
+        </div>
+
+        <!-- Karte 5 -->
+        <div class="travel-card">
+            <h3> 🗺️Tourists and Outdoor pros</h3>
+            <p>There are so many Citys and so much nature for us to explore! Lets look like very silly tourists everywhere we go! We will check out all the landmarks to take pictures for our families. The part Im probably not completly gonna tell my mom is going to be the sick hiking adventures we are going to have in the Alps!  </p>
+	</div>
+
+        <!-- Karte 6 -->
+        <div class="travel-card">
+            <h3>🏖️ Relax days</h3>
+            <p>Within all this action we will also have to find lots of room for taking it slow and hanging out together. I am already dreaming of laying at the beach with you, preparing picknicks and cuddeling in cozy Hotel room beds. Not to forget all the amzing sex we are gonna have!</p>
+        </div>
+    </div>
+</div>
 
             <div id="tab-distance" class="content-box hidden">
                 <h2>📍 Our Distance</h2>
@@ -361,9 +423,9 @@ alt="Luki 1">
         const NEXT_FLIGHT_DATE = new Date("2026-07-23T10:20:00").getTime();    
         const ANNIVERSARY_DATE = new Date("2026-01-12T22:30:00");              
 
-        // Koordinaten von Calistas Heimatstadt (Beispiel: Los Angeles)
-        const CALISTA_LAT = 39.73104; 
-        const CALISTA_LON = -121.8411774;
+        // Koordinaten von Luki
+        const CALISTA_LAT = 48.453000; 
+        const CALISTA_LON = 9.099000;
 
         // TAB-WECHSEL LOGIK
         function switchTab(tabName) {
@@ -419,7 +481,7 @@ alt="Luki 1">
             document.getElementById("love-counter").innerText = `${diffDays}d ${diffHours}h ${diffMinutes}m ${diffSeconds}s`;
         }, 1000);
 
-        // GPS DISTANZ-BERECHNUNG (JETZT IN MEILEN)
+        // GPS DISTANZ-BERECHNUNG 
         document.getElementById("gps-btn").addEventListener("click", function() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -471,11 +533,11 @@ alt="Luki 1">
         }
         getTubingenWeather();
 
-        // 1. DIESEN TEIL ERSETZEN (Dein Login-Button-Klick)
+      
         document.getElementById("unlock-btn").addEventListener("click", function() {
             const input = document.getElementById("password-input").value;
             
-            // BEHOBEN: "SECRET_PASSWORD" zu SECRET_PASSWORD geändert (ohne Anführungszeichen!)
+
             if (input === SECRET_PASSWORD) {
                 // Zeigt zuerst die Werbung an
                 document.getElementById("ad-popup").classList.remove("hidden");
